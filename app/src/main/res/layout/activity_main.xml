@@ -5,19 +5,49 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.camera2.MainActivity">
-    <TextureView
-        android:id="@+id/texture"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_takepicture"
-        android:layout_alignParentTop="true"/>
-    <Button
-        android:id="@+id/btn_takepicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextureView
+            android:id="@+id/texture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/take_picture" />
+        android:gravity="start"
+        >
+        <ImageButton
+
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/btnGalleryView"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/image"
+            android:layout_gravity="center"
+            />
+        <ImageButton
+            android:id="@+id/btn_takepicture"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:text="Take Photo"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/camera"
+            android:layout_gravity="center"
+            />
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/btnChangeCam"
+            android:layout_marginEnd="100dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rotate"
+            />
+    </LinearLayout>
+
 </RelativeLayout>

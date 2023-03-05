@@ -2,6 +2,7 @@ package com.example.camera2;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -16,13 +17,17 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -30,6 +35,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,8 +49,10 @@ import java.util.List;
 
 
     public class MainActivity extends AppCompatActivity {
+        private static final int GALLERY_REQUEST_CODE = 123;
         private static final String TAG = "AndroidCameraApi";
-        private Button takePictureButton;
+        private ImageButton takePictureButton;
+        private ImageButton btnGalleryView;
         private TextureView textureView;
         private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
         static {
@@ -69,11 +77,26 @@ import java.util.List;
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+
+            btnGalleryView =(ImageButton) findViewById(R.id.btnGalleryView);
+
+            btnGalleryView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_QUICK_VIEW, Uri.parse("content:/storage/emulated/0/DCIM/Camera"));
+                    startActivity(intent);
+                }
+            });
+
+
+
+
+
             //vinculamos con la textureView
             textureView = (TextureView) findViewById(R.id.texture);
             assert textureView != null;
             textureView.setSurfaceTextureListener(textureListener);
-            takePictureButton = (Button) findViewById(R.id.btn_takepicture);
+            takePictureButton = (ImageButton) findViewById(R.id.btn_takepicture);
             assert takePictureButton != null;
             //listener del boton para tomar la foto
             takePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +106,7 @@ import java.util.List;
                 }
             });
         }
+
         TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
@@ -256,6 +280,14 @@ import java.util.List;
                 e.printStackTrace();
             }
         }
+        @Override
+        protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+                Uri imageUri = data.getData();
+                // Do something with the selected image...
+            }
+        }
         protected void createCameraPreview() {
             try {
                 //guardar la SurfaceTexture que es el buffer para la preview
@@ -341,6 +373,8 @@ import java.util.List;
         }
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             if (requestCode == REQUEST_CAMERA_PERMISSION) {
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     // close the app
